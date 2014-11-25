@@ -11,8 +11,14 @@
 
 #import "FamilyDetailsViewController.h"
 #import "FamilyMembersViewController.h"
+#import "PhotoClassDataStore.h"
 
-@interface FamilyDetailsViewController ()
+@interface FamilyDetailsViewController () <UIImagePickerControllerDelegate>
+{
+    
+    PhotoClassDataStore *_photoDataStore;
+    
+}
 
 @end
 
@@ -35,6 +41,7 @@
     
     super.navigationItem.rightBarButtonItem = doneButton;
     
+    _photoDataStore = [PhotoClassDataStore sharedInstance];
     
     // Return the address of the new object
     return self;
@@ -62,8 +69,58 @@
     
     [self presentModalViewController:familyVC animated:YES];
     
+}
+
+- (IBAction)addPhoto:(id)sender
+{
+    
+    NSLog(@"add photo");
+    
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    
+    // If the device ahs a camera, take a picture, otherwise,
+    // just pick from the photo library
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    } else {
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    }
+    
+    imagePicker.delegate = self;
+    
+    // Place image picker on the screen
+    [self presentViewController:imagePicker animated:YES completion:NULL];
+    
+    
     
 }
+
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    
+    // Get picked image from info dictionary
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    
+    // Put that image onto the screen in our image view
+    //self.imageView.image = image;
+    
+    NSData *imageData = UIImageJPEGRepresentation(image, 0.05f);
+    
+    UIImage *imageToUpload = [[UIImage alloc] initWithData:imageData];
+    
+    
+    [_photoDataStore addPhoto:imageToUpload];
+    
+    NSLog(@"abc");
+    
+    // Take image picker off the screen -
+    // you must call this dismiss method
+    [self dismissViewControllerAnimated:YES completion:NULL];
+    
+}
+
+
 
 /*
 #pragma mark - Navigation

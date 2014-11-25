@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
 
 #import "FamilyViewController.h"
 #import "FramesViewController.h"
@@ -20,6 +21,14 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // Parse Init
+    
+    [Parse setApplicationId:@"Me02DmyYYGn13FkaTdAzB6ILahdT1eUUvsJLKunF"
+                  clientKey:@"ctb2kXcmPRYwiHm8yUmAZu1XLkA21XGVLQpSaT7o"];
+    
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     
